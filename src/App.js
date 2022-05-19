@@ -1,23 +1,43 @@
-import logo from './logo.svg';
+import { useState } from 'react';
 import './App.css';
+import TasksForm from './components/TasksForm';
+import TasksList from './components/TasksList';
 
 function App() {
+
+  const initialTasks = [
+    {
+      id: 1,
+      name: "Llamar a Juan",
+      category: "Operativas",
+      description: "Especificar ordenes del dia",
+      done: false
+    },
+    {
+      id: 2,
+      name: "Pedir repuestos",
+      category: "Operativas",
+      description: "solicitar repuesto impresora",
+      done: true
+    }
+  ]
+
+  const [tasks, setTasks] = useState(initialTasks);
+
+  const addTask = (taskItem) =>{
+    console.log("Se añadio una tarea");
+    console.log(taskItem);
+    setTasks([...tasks, taskItem]);
+  }
+
+  const deleteTask = name => {
+    console.log(name);
+  }
+
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+      <TasksForm addTask={addTask}/>
+      <TasksList tasks={tasks} deleteTask={deleteTask}/>
     </div>
   );
 }
