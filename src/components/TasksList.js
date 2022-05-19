@@ -13,7 +13,7 @@ const TasksList = ({ tasks, deleteTask }) => {
                     <button onClick={() => deleteTask(task.name)}>
                         Delete :D
                     </button>
-                    </li>
+                    </li>  
                 ))
             }
         </ul>
