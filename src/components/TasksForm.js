@@ -1,49 +1,60 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 
-const TasksForm = ({ addTask }) => {
+const TasksForm = ({ addTask, taskSelected, deselectTask, editTask }) => {
 
-    const [name, setName] = useState ('');
-    const [category, setCategory] = useState('');
+    const [title, setTitle] = useState ('');
     const [description, setDescription] = useState('');
-    const [done, setDone] = useState(false);
+    const [isCompleted, setisCompleted] = useState(false);
+
+    console.log(taskSelected);
+
+    useEffect(() => {
+        if(taskSelected !== null){
+            setTitle(taskSelected.title);
+            setDescription(taskSelected.description);
+            setisCompleted(taskSelected.isCompleted)
+        }else{
+            reset();
+        }
+    },[taskSelected])
 
     const submit = e =>{
         e.preventDefault();
         const task = {
-            id:Date.now(),
-            name,
-            category,
+            title,
             description,
-            done
+            isCompleted
         }
-        addTask(task);
-    }
+        if(taskSelected === null){
+            addTask(task);
+        }else{
+            editTask(task);
+            deselectTask();
+        }
+    };
+
+    const reset = () => {
+        setTitle("");
+        setDescription("");
+        setisCompleted(false);
+      };
 
     return (
         <div>
-            <form onSubmit={submit}>
-
-            <div className="input_container">
+            <form onSubmit={submit} className="tasks-form">
+            <div className="input-container">
                 <label htmlFor="task">Task: </label>
                 <input 
                 type="text" 
                 id="task"
-                onChange={e => setName(e.target.value)}
-                value={name}
+                onChange={e => setTitle(e.target.value)}
+                value={title}
                 />
             </div>
 
-            <div className="input_container">
-                <label htmlFor="category">Category: </label>
-                <input 
-                type="text" 
-                id="category"
-                onChange={e => setCategory(e.target.value)}
-                value={category}
-                />
-            </div>
+            
 
-            <div className="input_container">
+            <div className="input-container">
                 <label htmlFor="description">Description: </label>
                 <textarea 
                 type="text" 
@@ -52,17 +63,24 @@ const TasksForm = ({ addTask }) => {
                 value={description}/>
             </div>
 
-            <div className="input_container">
+            <div className="input-container">
                 <label htmlFor="done">Done: </label>
                 <input 
                 type="checkbox" 
                 id="done"
-                onChange={e=> setDone(e.target.checked)}
-                checked={done}
+                onChange={e=> setisCompleted(e.target.checked)}
+                checked={isCompleted}
                 />
             </div>
 
             <button>Submit</button>
+            {
+                taskSelected !== null && (
+                    <button type='button' onClick={deselectTask}>Cancel</button>
+                ) 
+            }
+
+            
 
 
 
